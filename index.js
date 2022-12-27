@@ -57,9 +57,20 @@ app.get("/movies/get/by-rating", (req, res) => {
 })
 
 app.get("/movies/get/by-title", (req, res) => {
-    movies.sort((a, b) => a.title.localeCompare(b.title));
+    movies.sort((a, b) => a.title.localeCompare(b.title))
     res.json({ status: 200, data: movies })
 })
+
+app.get('/movies/get/id/:id', (req, res) => {
+    const id = parseInt(req.params.id);
+    const movie = movies[id - 1];
+    if (movie) {
+        res.status(200).json({ status: 200, data: movie })
+    } else {
+        res.status(404).json({ status: 404, error: true, message: `the movie ${id} does not exist` })
+    }
+});
+
 
 app.get("/movies/edit", (req, res) => {
 
