@@ -38,19 +38,34 @@ app.get("/search", (req, res) => {
     }
 })
 
-app.get("/movies/add", (req,res)=>{
-    
+app.get("/movies/add", (req, res) => {
+
 })
 
 app.get("/movies/get", (req, res) => {
     res.json({ status: 200, data: movies })
 })
 
-app.get("/movies/add", (req,res)=>{
+app.get("/movies/get/by-date", (req, res) => {
+    movies.sort((x, y) => x.year - y.year)
+    res.json({ status: 200, data: movies })
+})
+
+app.get("/movies/get/by-rating", (req, res) => {
+    movies.sort((x, y) => y.rating - x.rating)
+    res.json({ status: 200, data: movies })
+})
+
+app.get("/movies/get/by-title", (req, res) => {
+    movies.sort((a, b) => a.title.localeCompare(b.title));
+    res.json({ status: 200, data: movies })
+})
+
+app.get("/movies/edit", (req, res) => {
 
 })
 
-app.get("/movies/add", (req,res)=>{
+app.get("/movies/delete", (req, res) => {
 
 })
 
