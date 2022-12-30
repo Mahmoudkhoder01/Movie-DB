@@ -1,0 +1,15 @@
+GET http://localhost:3000/moviesDB/get  
+
+###
+
+POST http://localhost:3000/moviesDB/?title=2&year=2020&rating=4
+
+###
+
+PATCH http://localhost:3000/moviesDB/edit/63aef773006556bd1724dbe7?title=hola&year=2000
+
+###
+DELETE http://localhost:3000/moviesDB/delete/2
+
+###
+GET http://localhost:3000/moviesDB/1
