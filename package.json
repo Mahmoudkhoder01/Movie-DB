@@ -18,13 +18,18 @@
   },
   "homepage": "https://github.com/Mahmoudkhoder01/Movie-DB#readme",
   "dependencies": {
+    "bcrypt": "^5.1.0",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.1",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "md5": "^2.3.0",
     "mongodb": "^2.2.16",
     "mongoose": "^6.8.1",
     "mongoose-ai": "^5.0.3",
-    "mongoose-auto-increment": "^5.0.1"
+    "mongoose-auto-increment": "^5.0.1",
+    "mongoose-encryption": "^2.1.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.20"
