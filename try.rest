@@ -2,6 +2,9 @@
 GET http://localhost:3000/get  
 
 ###
+GET http://localhost:3000/get/users  
+
+###
 
 POST http://localhost:3000/?title=ayyachi&year=2020&rating=7
 
@@ -30,3 +33,7 @@ PATCH http://localhost:3000/edit?email=1@2.com&password=222
 
 ###
 GET http://localhost:3000/tesst
+
+###
+
+POST http://localhost:3000/logout?email=1@2.com&password=123

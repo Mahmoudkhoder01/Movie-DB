@@ -77,6 +77,17 @@ const userSchema = new mongoose.Schema({
 const user = mongoose.model("User", userSchema)
 
 
+//Get All Users
+app.get("/get/users", async (req, res) => {
+    try {
+        const DataBase = await user.find()
+        res.json({ status: 200, data: DataBase })
+    } catch (error) {
+        res.json({ status: 500, message: error.message })
+    }
+})
+
+
 // Register
 app.post("/register", (req, res) => {
     const email = req.query.email
@@ -93,7 +104,7 @@ app.post("/register", (req, res) => {
     })
 })
 
-// Login
+// Log In
 app.post("/login", (req, res) => {
     const email = req.query.email
     const pass = req.query.password
@@ -106,6 +117,29 @@ app.post("/login", (req, res) => {
                     if (result === true) {
                         $authenticate = true
                         res.json({ status: 202, message: "You are logged in" })
+                        return
+                    } else {
+                        res.json({ status: 404, message: err })
+                    }
+                })
+            }
+        }
+    })
+})
+
+// Log Out
+app.post("/logout", (req, res) => {
+    const email = req.query.email
+    const pass = req.query.password
+    user.findOne({ email: email }, (err, foundUser) => {
+        if (err) {
+            res.json({ status: 404, message: "User NOt Found" })
+        } else {
+            if (foundUser) {
+                bcrypt.compare(pass, foundUser.password, (err, result) => {
+                    if (result === true) {
+                        $authenticate = false
+                        res.json({ status: 202, message: "You are logged out" })
                         return
                     } else {
                         res.json({ status: 404, message: err })
