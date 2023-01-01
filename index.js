@@ -25,7 +25,7 @@ async function connect() {
 }
 connect()
 
-var authenticate = false
+let $authenticate = false
 
 app.get("/", (req, res) => {
     res.send("ok")
@@ -104,7 +104,7 @@ app.post("/login", (req, res) => {
             if (foundUser) {
                 bcrypt.compare(pass, foundUser.password, (err, result) => {
                     if (result === true) {
-                        authenticate = true
+                        $authenticate = true
                         res.json({ status: 202, message: "You are logged in" })
                         return
                     } else {
@@ -146,15 +146,15 @@ app.delete("/delete", (req, res) => {
         if (docs == null) {
             return res.json({ status: res.statusCode, message: `the user with ${email} does not exist` })
         } else {
-            authenticate = false
-            res.json({ status: res.statusCode, data: "The user is deleted",hh: authenticate })
+            $authenticate = false
+            res.json({ status: res.statusCode, data: "The user is deleted" })
             return
         }
     })
 })
 
 app.get("/tesst", (req, res) => {
-    res.send(!authenticate)
+    res.send(!$authenticate)
 })
 
 const movies = [
@@ -221,7 +221,7 @@ app.get("/by-rating", (req, res) => {
         }
     })
 })
-//Getting by title
+//Getting by title 
 app.get("/by-title", (req, res) => {
     moviesList.find().sort({ title: 1 }).exec((err, Movies) => {
         if (err) {
@@ -251,9 +251,9 @@ app.post("/", async (req, res) => {
     const title = req.query.title
     const year = req.query.year
     const rating = parseFloat(req.query.rating) || 4
-    if (authenticate) {
+    if (!$authenticate) {
         res.json({ status: 404, message: "You don't have access to add a movie" })
-    } else if (!authenticate) {
+    } else if ($authenticate) {
         const movie = new moviesList({
             _id: new mongoose.Types.ObjectId(),
             title: title,
@@ -276,9 +276,9 @@ app.patch("/edit/:id", (req, res) => {
     const newTitle = req.query.title
     const newYear = req.query.year
     const newRating = req.query.rating
-    if (authenticate) {
+    if (!$authenticate) {
         res.json({ status: 404, message: "You don't have access to edit the movie" })
-    } else if (!authenticate) {
+    } else if ($authenticate) {
         if (req.query.rating > 10 || req.query.rating < 0) {
             return res.json({ status: 403, error: true, message: 'you rating should be between 0 and 10' })
         }
@@ -299,9 +299,9 @@ app.patch("/edit/:id", (req, res) => {
 //Deleting one
 app.delete("/delete/:id", (req, res) => {
     const id = req.params.id
-    if (authenticate) {
-        res.json({ status: 404, message: "You don't have access to edit the movie" })
-    } else if (!authenticate) {
+    if (!$authenticate) {
+        res.json({ status: 404, message: "You don't have access to delete the movie" })
+    } else if ($authenticate) {
         moviesList.findOneAndDelete(({ _id: id }), (err, docs) => {
             if (err) {
                 return res.json({ status: res.statusCode, message: err })
@@ -314,9 +314,8 @@ app.delete("/delete/:id", (req, res) => {
         })
     }
 })
-
 app.listen(3000, () => {
     console.log("Server started on port 3000");
 })
 
-module.exports = authenticate
+module.exports = $authenticate
