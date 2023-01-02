@@ -1,26 +1,24 @@
 require("dotenv").config()
 const express = require("express");
 const app = express()
-const bodyParser = require('body-parser')
 const mongoose = require("mongoose")
 const bcrypt = require("bcrypt")
 const saltRounds = 10
 // const encrypt = require("mongoose-encryption") ;
 // const md5 = require("md5")
 
-
-mongoose.set('strictQuery', true);
+mongoose.set('strictQuery', true)
 async function connect() {
     try {
         await mongoose.connect(
             process.env.DATABASE_URL,
             { useNewUrlParser: true, useUnifiedTopology: true },
             async () => {
-                console.log("Connected to MongoDB ");
+                console.log("Connected to MongoDB ")
             }
         )
     } catch (error) {
-        console.log(error.message);
+        console.log(error.message)
     }
 }
 connect()
@@ -32,20 +30,20 @@ app.get("/", (req, res) => {
 })
 
 app.get("/test", (req, res) => {
-    res.json({ status: 200, message: 'ok' });
+    res.json({ status: 200, message: 'ok' })
 });
 
 app.get("/time", (req, res) => {
-    const curretnTime = new Date();
-    const hours = curretnTime.getHours();
-    const minutes = curretnTime.getMinutes();
+    const curretnTime = new Date()
+    const hours = curretnTime.getHours()
+    const minutes = curretnTime.getMinutes()
     res.json({ status: 200, message: `${hours}:${minutes}` })
 })
 
 
 app.get('/hello/:id', (req, res) => {
     const id = req.params.id;
-    res.json({ status: 200, message: `Hello, ${id}` });
+    res.json({ status: 200, message: `Hello, ${id}` })
 });
 
 app.get("/search", (req, res) => {
@@ -110,7 +108,7 @@ app.post("/login", (req, res) => {
     const pass = req.query.password
     user.findOne({ email: email }, (err, foundUser) => {
         if (err) {
-            res.json({ status: 404, message: "User NOt Found" })
+            res.json({ status: 404, message: "User Not Found" })
         } else {
             if (foundUser) {
                 bcrypt.compare(pass, foundUser.password, (err, result) => {
@@ -151,19 +149,20 @@ app.post("/logout", (req, res) => {
 })
 
 // Edit password
-app.patch("/edit", (req, res) => {
+app.patch("/edit", async (req, res) => {
     const email = req.query.email
     const pass = req.query.password
-    user.findOneAndUpdate({ email: email }, { $set: { password: pass } }, { new: true },
+    const hashedPassword = await bcrypt.hash(pass, 10)
+    user.findOneAndUpdate({ email: email }, { $set: { password: hashedPassword } }, { new: true },
         (err, updateData) => {
             if (err) {
-                return res.json({ status: 404, message: err })
+                return res.json({ status: 404, message: err.message })
             }
             if (updateData == null) {
-                return res.json({ status: 404, message: `the movie ${id} does not exist` })
+                return res.json({ status: 404, message: `the user ${email} does not exist` })
             } else {
                 res.json({ status: 200, data: "Your password are changed successfully" })
-                return
+                return 
             }
         })
 })
@@ -211,7 +210,7 @@ let movieDBSchema = new mongoose.Schema({
         type: Number,
         required: true,
         min: 1900,
-        max: 2022
+        max: 2023
     },
     rating: {
         type: Number,
@@ -270,18 +269,17 @@ app.get("/by-title", (req, res) => {
 app.get('/:id', (req, res) => {
     moviesList.findById(req.params.id, (error, movie) => {
         if (error) {
-            return res.status(500).json({ status: 500, error: true, message: error });
+            return res.status(500).json({ status: 500, error: true, message: error })
         }
         if (!movie) {
-            return res.status(404).json({ status: 404, error: true, message: `the movie ${req.params.id} does not exist` });
+            return res.status(404).json({ status: 404, error: true, message: `the movie ${req.params.id} does not exist` })
         }
         res.status(200).json({ status: 200, data: movie });
-    });
-});
+    })
+})
 
 //Adding one
 app.post("/", async (req, res) => {
-    const id = req.query.id
     const title = req.query.title
     const year = req.query.year
     const rating = parseFloat(req.query.rating) || 4

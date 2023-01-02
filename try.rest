@@ -6,14 +6,14 @@ GET http://localhost:3000/get/users
 
 ###
 
-POST http://localhost:3000/?title=ayyachi&year=2020&rating=7
+POST http://localhost:3000/?title=mmahmoud&year=2023&rating=10
 
 ###
 
-PATCH http://localhost:3000/edit/63b073a30d2f2247d03036cf?title=hola&year=2000
+PATCH http://localhost:3000/edit/63b16ead56d765c1bb0f02a9?title=Taleb&year=2021&rating=6
 
 ###
-DELETE http://localhost:3000/delete/63b1526fa735bc33911418cc
+DELETE http://localhost:3000/delete/63b16ead56d765c1bb0f02a9
 
 ###
 GET http://localhost:3000/moviesDB/get
@@ -37,3 +37,10 @@ GET http://localhost:3000/tesst
 ###
 
 POST http://localhost:3000/logout?email=1@2.com&password=123
+
+###
+ 
+ GET http://localhost:3000/63aeec0e24c47d1e5fd737c9
+ 
+ ###
+ 
